@@ -20,7 +20,7 @@ public class User implements Serializable {
 	public User(String userName, String password, int token){
 		this.userName = userName;
 		this.password = password;
-		this.token = token;
+		this.userToken = token;
 		this.records.put("Wins", records.get("Wins"));
 		this.records.put("Losses", records.get("Losses"));
 		this.records.put("Ties", records.get("Ties"));
@@ -30,7 +30,7 @@ public class User implements Serializable {
 	public User(User user){
 		this.userName = user.userName;
 		this.password = user.password;
-		this.token = user.token;
+		this.userToken = user.userToken;
 		this.records.putAll(records);
 	}
 

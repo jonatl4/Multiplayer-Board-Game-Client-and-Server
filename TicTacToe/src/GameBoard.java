@@ -10,8 +10,8 @@ import javafx.util.Pair;
  * */
 
 public abstract class GameBoard implements Serializable, Cloneable{
-	protected HashMap<Pair<Integer,Integer>, Piece> currentGameBoardState;
-	protected ArrayList<Piece> pieces;
+	protected HashMap<Pair<Integer,Integer>, Piece> currentGameBoardState = new HashMap<Pair<Integer,Integer>, Piece>();
+	protected ArrayList<Piece> pieces = new ArrayList<Piece>();
 	
 	protected String gameType; // the game type that this board represents
 	protected boolean turn; // whose turn it is - the user?

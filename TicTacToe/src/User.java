@@ -1,3 +1,10 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 
@@ -17,14 +24,26 @@ public class User implements Serializable {
 		this.records.put("TotalGamesPlayed", 0);
 	}
 	
+	public User(String userName, String password){
+		this.records = new HashMap<String, Integer>(); 
+		this.userName = userName;
+		this.password = password;
+		this.userToken = 0;
+		this.records.put("Wins", 0);
+		this.records.put("Losses", 0);
+		this.records.put("Ties", 0);
+		this.records.put("TotalGamesPlayed", 0);
+	}
+	
 	public User(String userName, String password, int token){
+		this.records = new HashMap<String, Integer>(); 
 		this.userName = userName;
 		this.password = password;
 		this.userToken = token;
-		this.records.put("Wins", records.get("Wins"));
-		this.records.put("Losses", records.get("Losses"));
-		this.records.put("Ties", records.get("Ties"));
-		this.records.put("TotalGamesPlayed", records.get("Ties"));
+		this.records.put("Wins", 0);
+		this.records.put("Losses", 0);
+		this.records.put("Ties", 0);
+		this.records.put("TotalGamesPlayed", 0);
 	}
 	
 	public User(User user){
@@ -74,4 +93,118 @@ public class User implements Serializable {
 	public void setUserToken(int userToken) {
 		this.userToken = userToken;
 	}
+	
+	/* added */
+	// Static methods (to manage accounts) start here
+	private static Hashtable<String, User> database = new Hashtable<String, User>();
+	/**
+	 * Loads the account list from an existing file and applies it
+	 * database
+	 */
+	public static void loadAccounts()
+	{
+		File extFile = new File("accounts.obj");
+		if(extFile.exists()) // if the file exists, read it in
+		{
+			FileInputStream inFile;
+			try
+			{
+				inFile = new FileInputStream(extFile);
+				ObjectInputStream inStream = new ObjectInputStream(inFile);
+				database = (Hashtable)inStream.readObject();
+			}
+			catch (FileNotFoundException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			catch (ClassNotFoundException e)
+			{
+				e.printStackTrace();
+			}			
+		}
+	}
+	
+	/**
+	 * Saves the updated account list.
+	 * @param database - the account list to save
+	 */
+	public static void saveAccounts()
+	{
+		FileOutputStream outFile;  // the below is file saving
+		try
+		{
+			outFile = new FileOutputStream("accounts.obj");
+			ObjectOutputStream outStream = new ObjectOutputStream(outFile);
+			outStream.writeObject(database);
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Validates the account.
+	 * @param database
+	 * @param inAccount
+	 * @return - whether the account is valid or not
+	 */
+	public static boolean validate(User inAccount)
+	{
+		User temp = (User)database.get(inAccount.getUserName());
+		if(temp!=null)
+		{
+			if(temp.password.equals(inAccount.password))
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Adds a new account to the database.
+	 * @param database
+	 * @param inAccount - the new account
+	 * @return
+	 */
+	public static void addAccount(User inAccount)
+	{
+		database.put(inAccount.getUserName(), inAccount);
+	}
+	
+	/**
+	 * Checks if an account exists.
+	 * @param database
+	 * @param inAccount
+	 * @return  - whether the account exists or not.
+	 */
+	public static boolean exists(User inAccount)
+	{
+		return (database.containsKey(inAccount.userName));
+	}
+	
+	public static User retrieve(String key)
+	{
+		return database.get(key);
+	}
+	
+	/**
+	 * Clones the account.
+	 */
+	public User clone()
+	{
+		User clonedAccount = new User("temp", "temp");
+		clonedAccount.userName = this.userName;
+		clonedAccount.password = this.password;
+		
+		return clonedAccount;
+	}
+
 }

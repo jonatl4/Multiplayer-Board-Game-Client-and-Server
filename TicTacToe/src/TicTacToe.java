@@ -8,20 +8,28 @@ public class TicTacToe extends GameBoard{
 
 	private int numRows; 
 	private int numColumns;
-	
 	// constructors 
 	public TicTacToe(){
 		// instantiate TICTACTOE gameBoard & temp TICTACTOE gameBoard
 		this.numRows = 3;
 		this.numColumns = 3; 
-		for(int i = 0; i < numRows; i++){
-			for(int j = 0; j < numColumns; j++){ // board filled with BLANK pieces
-				currentGameBoardState.put(new Pair<Integer, Integer>(i,j), new TicTacToePiece());
+		for(int i = 0; i < this.numRows; i++){
+			for(int j = 0; j < this.numColumns; j++){ // board filled with BLANK pieces
+				
+				this.currentGameBoardState.put(new Pair<Integer, Integer>(i,j), new TicTacToePiece());
 				//temp.put(new Pair<Integer, Integer>(i,j), new TicTacToePiece());
 			}
 		}
 		this.gameType = "TICTACTOE"; // will relate to the client later
 		this.turn = false; // default
+	}
+	
+	public TicTacToe(TicTacToe ttt){
+		this.numRows = ttt.numRows;
+		this.numColumns = ttt.numColumns;
+		this.currentGameBoardState.putAll(ttt.currentGameBoardState);
+		this.gameType = ttt.gameType;
+		this.turn = ttt.turn;
 	}
 	
 	// setters & getters 
@@ -56,12 +64,12 @@ public class TicTacToe extends GameBoard{
 		// TODO Auto-generated method stub
 		if((move.getKey() >= 0 && move.getKey() <= 2) && (move.getValue() >= 0 && move.getValue() <= 2)){
 			if(userToken == 1){
-				this.currentGameBoardState.get(move).name = "X";
+				this.currentGameBoardState.get(move).setName("X");
 			}
 			else if(userToken == 2){
-				this.currentGameBoardState.get(move).name = "0";
+				this.currentGameBoardState.get(move).setName("O");
 			}
-			this.currentGameBoardState.get(move).currentPosition = move;
+			this.currentGameBoardState.get(move).setCurrentPosition(move);
 		}
 	}
 
@@ -70,71 +78,71 @@ public class TicTacToe extends GameBoard{
 	public int checkWinner() {
 		// TODO Auto-generated method stub
 		// rows  
-		if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)))))
+		if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("X")) ? 1 : 2;
 		}
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)))))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName().equals("X")) ? 1 : 2;
 		}
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName().equals("X")) ? 1 : 2;
 		}
 		// columns
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,0))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("X")) ? 1 : 2;
 		}
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).getName().equals("X")) ? 1 : 2;
 		}
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals("X")) ? 1 : 2;
 		}
 		// diagonals 
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).getName().equals("X")) ? 1 : 2;
 		}
-		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
-		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)))))
+		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals("BLANK") &&
+		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName().equals("BLANK")) &&
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName()) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).getName().equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).getName())))
 		{
-			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("X")) ? 1 : 2;
+			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).getName().equals("X")) ? 1 : 2;
 		}
 		else{
 			return 0;
@@ -184,6 +192,7 @@ public class TicTacToe extends GameBoard{
 		if(this.turn == true && this.currentGameBoardState.get(move).name.equals("BLANK")){
 			return true; 
 		}
+		System.out.println("\nIllegal move! Try again\n");
 		return false; 
 	}
 	

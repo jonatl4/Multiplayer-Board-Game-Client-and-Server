@@ -10,7 +10,7 @@ public class TicTacToe extends GameBoard{
 	private int numColumns;
 	// constructors 
 	public TicTacToe(){
-		// instantiate TICTACTOE gameBoard & temp TICTACTOE gameBoard
+		// instantiate TICTACTOE this.currentGameBoardState & temp TICTACTOE this.currentGameBoardState
 		this.numRows = 3;
 		this.numColumns = 3; 
 		for(int i = 0; i < this.numRows; i++){
@@ -202,5 +202,26 @@ public class TicTacToe extends GameBoard{
 		}
 			
 		return true; 
+	}
+
+	@Override
+	public void printBoard() {
+		// TODO Auto-generated method stub
+		// row 1
+		System.out.println(
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name + "|");
+		// row 2
+		System.out.println(
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name + "|");
+		
+		// row 3
+		System.out.println(
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name + "|" +
+				this.currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name + "|\n");
 	}
 }

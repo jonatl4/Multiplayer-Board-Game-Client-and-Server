@@ -78,5 +78,6 @@ public abstract class GameBoard implements Serializable, Cloneable{
 	public abstract boolean hasWinner();
 	public abstract GameBoard clone();
 	public abstract void noLegitMoves();
+	public abstract void printBoard();
 
 }

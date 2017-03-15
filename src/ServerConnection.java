@@ -68,15 +68,37 @@ public class ServerConnection extends Thread{
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.STARTGAME){
 					this.gameType = ((GameBoard) clientInput.getData()).getGameType();
 					System.out.println(this.gameType);
-					if(lobby.getClientThreads().size() > 1){
-						matchClients(clientId);
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MATCHED);
+					if(matchClients(clientId)){
+						GameBoard gb1 = ((GameBoard) clientInput.getData());
+						System.out.println(gb1);
+						gb1.setTurn(true);
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1);
 						Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
-						System.out.println(activeGame.getKey());
+						activeGame.getKey().getUser().setUserToken(1);
+						activeGame.getValue().getUser().setUserToken(2);
+						System.out.println(activeGame.getKey().getMatchId());
+						System.out.println(activeGame.getValue().getMatchId());
+						System.out.println(lobby.getClientThreads().size());
 						activeGame.getKey().sendPacket(outgoingData);
+						GameBoard gb2 = ((GameBoard) clientInput.getData());
+						gb2.setTurn(false);
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2);
 						activeGame.getValue().sendPacket(outgoingData);
 					}
-				}
+				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.CLIENTMOVE){
+					Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
+					GameBoard gb1 = ((GameBoard) clientInput.getData());
+					System.out.println(gb1);
+					if(gb1.getTurn()){
+						gb1.setTurn(!gb1.getTurn());
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb1);
+						activeGame.getKey().sendPacket(outgoingData);
+						GameBoard gb2 = ((GameBoard) clientInput.getData());
+						gb2.setTurn(!gb1.getTurn());
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb2);
+						activeGame.getValue().sendPacket(outgoingData);
+					}
+				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.WAIT){}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.ACCOUNT)
 				{
 					user = (User)clientInput.getData();
@@ -140,7 +162,7 @@ public class ServerConnection extends Thread{
 		}
 	}
 	
-	public void matchClients(int clientId){
+	public boolean matchClients(int clientId){
 		int matchedWaitingClientId = 0;
 		boolean foundGame = false;
 		
@@ -171,17 +193,20 @@ public class ServerConnection extends Thread{
 				lobby.getClientThreads().remove(matchedWaitingClientId);
 			}
 		}
-		//Need to save the matchId for future
+		return foundGame;
 	}
 	
 	public int getClientId(){
 		return clientId;
 	}
 	
-	private void setMatchId(int matchId){
+	public void setMatchId(int matchId){
 		this.matchId = matchId;
 	}
 	
+	public int getMatchId(){
+		return matchId;
+	}
 	
 
 	

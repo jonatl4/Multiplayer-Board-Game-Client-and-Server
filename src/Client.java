@@ -16,6 +16,7 @@ public class Client extends JFrame implements Runnable{
 	private static ObjectInputStream input = null;
 	protected User user;
 	boolean isStillPlaying = true;
+	private GameBoard currGame;
 	
 	public static void main(String[] args){
 		//System.out.println("Starting client connection...");
@@ -50,22 +51,28 @@ public class Client extends JFrame implements Runnable{
 		
 		
 		while(isStillPlaying){
-			
-			
-			
 			try {
 				NetworkProtocol incoming = (NetworkProtocol)input.readObject();
 				if(incoming.getDataType() == NetworkProtocol.ProtocolType.TESTSERVER){
 					//System.out.println("Receiving TESTSERVER data from server");
 
 					
-				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MATCHED){
-						System.out.println("Matched");
+				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
+					currGame = ((GameBoard) incoming.getData());
+					System.out.println(currGame.getTurn());
+					System.out.println(user.getUserToken());
+					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
+					sendPacket(outgoingData);
+				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.WAIT){
+					currGame = ((GameBoard) incoming.getData());
+					System.out.println(currGame.getTurn());
+					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, currGame);
+					sendPacket(outgoingData);
 				}
 				else if(incoming.getDataType() == NetworkProtocol.ProtocolType.ACCOUNTVALID){
 					System.out.println("Waiting for opponent...");
-					TicTacToe gameBoard = new TicTacToe();
-					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.STARTGAME, (GameBoard) gameBoard);
+					currGame = new TicTacToe();
+					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.STARTGAME, currGame);
 					sendPacket(outgoingData);
 				}
 				else if(incoming.getDataType() == NetworkProtocol.ProtocolType.ACCOUNTINVALID){;

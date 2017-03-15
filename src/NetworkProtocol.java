@@ -5,15 +5,27 @@ public class NetworkProtocol implements Serializable{
 	private Object data;
 	
 	public enum ProtocolType{
-		TESTCLIENT, TESTSERVER
+		TESTCLIENT, TESTSERVER, ACCOUNTINVALID, ACCOUNTVALID, ACCOUNT, NEWACCOUNT, PRINTLOBBY, STARTGAME, MATCHED
 	}
 	
 	public NetworkProtocol(ProtocolType sendDataType){
 		this.dataType = sendDataType;
-		//this.data = sendData;
 	}
+	
+	public NetworkProtocol(ProtocolType inType, GameObject inMessage)
+	{
+		dataType = inType;
+		data = inMessage;
+	}
+	
 	
 	public ProtocolType getDataType(){
 		return dataType;
 	}
+	
+	public Object getData()
+	{
+		return data;
+	}
+	
 }

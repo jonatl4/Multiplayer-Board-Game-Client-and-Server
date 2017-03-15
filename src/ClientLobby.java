@@ -1,37 +1,43 @@
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.util.Pair;
+
 public class ClientLobby {
 
 	private Map<Integer, ServerConnection> clientThreads;
-	private Map<Integer, Boolean> activeThreads;
+	private Map<Integer, Pair<ServerConnection, ServerConnection>> activeGames;
 	
 	public ClientLobby(){
 		clientThreads = new HashMap<Integer, ServerConnection>();
-		activeThreads = new HashMap<Integer, Boolean>();
+		activeGames = new HashMap<Integer, Pair<ServerConnection, ServerConnection>>();
 	}
 	
 	public Map<Integer, ServerConnection> getClientThreads(){
 		return clientThreads;
 	}
 	
-	public Map<Integer, Boolean> getActiveThreads(){
-		return activeThreads;
+	public Map<Integer, Pair<ServerConnection, ServerConnection>> getActiveGames(){
+		return activeGames;
 	}
 	
 	public ServerConnection getClient(int clientId){
 		return clientThreads.get(clientThreads);
 	}
 	
-	public Boolean getActiveThread(int clientId){
-		return activeThreads.get(clientId);
+	public Pair<ServerConnection, ServerConnection> getActiveGame(int gameId){
+		return activeGames.get(gameId);
 	}
 	
 	public void setClientThread(int clientId, ServerConnection clientThread){
 		clientThreads.put(clientId, clientThread);
 	}
 	
-	public void setActiveThread(int clientId, Boolean check){
-		activeThreads.put(clientId, check);
+	public void setActiveThread(int gameId, Pair<ServerConnection, ServerConnection> activeGame){
+		activeGames.put(gameId, activeGame);
+	}
+	
+	public boolean gameExists(int matchId){
+		return activeGames.containsKey(matchId);
 	}
 }

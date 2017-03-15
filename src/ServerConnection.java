@@ -69,7 +69,7 @@ public class ServerConnection extends Thread{
 					this.gameType = ((GameBoard) clientInput.getData()).getGameType();
 					System.out.println(this.gameType);
 					if(matchClients(clientId)){
-						GameBoard gb1 = ((GameBoard) clientInput.getData());
+						GameBoard gb1 = ((GameBoard) clientInput.getData()).clone();
 						System.out.println(gb1);
 						gb1.setTurn(true);
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1);
@@ -80,23 +80,32 @@ public class ServerConnection extends Thread{
 						System.out.println(activeGame.getValue().getMatchId());
 						System.out.println(lobby.getClientThreads().size());
 						activeGame.getKey().sendPacket(outgoingData);
-						GameBoard gb2 = ((GameBoard) clientInput.getData());
+						GameBoard gb2 = ((GameBoard) clientInput.getData()).clone();
 						gb2.setTurn(false);
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2);
 						activeGame.getValue().sendPacket(outgoingData);
 					}
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.CLIENTMOVE){
 					Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
-					GameBoard gb1 = ((GameBoard) clientInput.getData());
+					GameBoard gb1 = ((GameBoard) clientInput.getData()).clone();
 					System.out.println(gb1);
 					if(gb1.getTurn()){
 						gb1.setTurn(!gb1.getTurn());
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb1);
-						activeGame.getKey().sendPacket(outgoingData);
-						GameBoard gb2 = ((GameBoard) clientInput.getData());
-						gb2.setTurn(!gb1.getTurn());
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb2);
-						activeGame.getValue().sendPacket(outgoingData);
+						if(this.getClientId() == activeGame.getKey().getClientId()){
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb1);
+							activeGame.getKey().sendPacket(outgoingData);
+							GameBoard gb2 = ((GameBoard) clientInput.getData()).clone();
+							gb2.setTurn(!gb1.getTurn());
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb2);
+							activeGame.getValue().sendPacket(outgoingData);
+						}else{
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb1);
+							activeGame.getValue().sendPacket(outgoingData);
+							GameBoard gb2 = ((GameBoard) clientInput.getData()).clone();
+							gb2.setTurn(!gb1.getTurn());
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb2);
+							activeGame.getKey().sendPacket(outgoingData);
+						}
 					}
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.WAIT){}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.ACCOUNT)

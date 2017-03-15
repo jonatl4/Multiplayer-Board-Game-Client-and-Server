@@ -60,13 +60,12 @@ public class Client extends JFrame implements Runnable{
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
 					currGame = ((GameBoard) incoming.getData());
 					System.out.println(currGame.getTurn());
-					System.out.println(user.getUserToken());
 					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
 					sendPacket(outgoingData);
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.WAIT){
 					currGame = ((GameBoard) incoming.getData());
 					System.out.println(currGame.getTurn());
-					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, currGame);
+					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT);
 					sendPacket(outgoingData);
 				}
 				else if(incoming.getDataType() == NetworkProtocol.ProtocolType.ACCOUNTVALID){

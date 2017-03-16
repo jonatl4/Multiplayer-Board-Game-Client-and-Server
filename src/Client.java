@@ -20,6 +20,7 @@ public class Client extends JFrame implements Runnable{
 	protected User user;
 	boolean isStillPlaying = true;
 	private GameBoard currGame;
+	
 	Scanner scanner = new Scanner(System.in);
 	int x = 0;
 	int y = 0;
@@ -69,13 +70,13 @@ public class Client extends JFrame implements Runnable{
 					System.out.println("Make your move");
 					/*Change Game State*/
 					System.out.println("Pick a position on the board to make a move: ");
-					System.out.print("Enter x coordinate: ");
-					x = scanner.nextInt();
 					System.out.print("Enter y coordinate: ");
+					x = scanner.nextInt();
+					System.out.print("Enter x coordinate: ");
 					y = scanner.nextInt();
 					System.out.println("");
 					Pair<Integer, Integer> move = new Pair<Integer, Integer>(x,y);
-					if(currGame.moveSequence(move, new TicTacToePiece(), this.user.getUserToken())){
+					if(currGame.moveSequence(move, new TicTacToePiece(), this.user.getUserToken())){//Instead of TicTacToePiece() its gonna need to be more like new gamePieceBuilder() so it allows for plugins
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
 						sendPacket(outgoingData);
 					}
@@ -91,6 +92,26 @@ public class Client extends JFrame implements Runnable{
 					//System.out.println(currGame.getTurn());
 					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT);
 					sendPacket(outgoingData);
+				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.GAMEOVER){
+					currGame = ((GameBoard) incoming.getData());
+					int winner = currGame.checkWinner();
+					if(winner == 1){
+						if(user.getUserToken() == winner){
+							printBoard(currGame);
+							System.out.println("You Won!");
+						}else{
+							printBoard(currGame);
+							System.out.println("Sorry, you lost...");
+						}
+					}else if(winner == 2){
+						if(user.getUserToken() == winner){
+							printBoard(currGame);
+							System.out.println("You won!");
+						}else{
+							printBoard(currGame);
+							System.out.println("Sorry, you lost...");
+						}
+					}
 				}
 				else if(incoming.getDataType() == NetworkProtocol.ProtocolType.ACCOUNTVALID){
 					System.out.println("Waiting for opponent...");

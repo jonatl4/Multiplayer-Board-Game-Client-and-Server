@@ -82,24 +82,24 @@ public class TicTacToe extends GameBoard{
 		if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
 		}
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("X")) ? 1 : 2;
 		}
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("X")) ? 1 : 2;
 		}
@@ -107,24 +107,24 @@ public class TicTacToe extends GameBoard{
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,0))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
 		}
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,1)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,1)).name.equals("X")) ? 1 : 2;
 		}
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("X")) ? 1 : 2;
 		}
@@ -132,16 +132,16 @@ public class TicTacToe extends GameBoard{
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,2)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,0)).name.equals("X")) ? 1 : 2;
 		}
 		else if((!currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals("BLANK") &&
 		   !currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name.equals("BLANK")) &&
-		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1))) && 
-		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)))))
+		(currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name) && 
+		currentGameBoardState.get(new Pair<Integer, Integer>(1,1)).name.equals(currentGameBoardState.get(new Pair<Integer, Integer>(2,0)).name)))
 		{
 			return (currentGameBoardState.get(new Pair<Integer, Integer>(0,2)).name.equals("X")) ? 1 : 2;
 		}
@@ -172,9 +172,16 @@ public class TicTacToe extends GameBoard{
 	}
 
 	@Override
-	public void noLegitMoves() {
-		// TODO Auto-generated method stub
+	public boolean noLegitMoves() {
+		for(int i = 0; i < this.numRows; i++){
+			for(int j = 0; j < this.numColumns; j++){
+				if(this.currentGameBoardState.get(new Pair<Integer, Integer>(i,j)).name.equals("BLANK")){
+					return false; 
+				}
+			}
+		}
 		
+		return true; 
 	}
 	
 	public boolean boardFilledUp(){

@@ -25,6 +25,14 @@ public class TicTacToe extends GameBoard{
 		this.turn = false; // default
 	}
 	
+	public TicTacToe(TicTacToe ttt){
+		this.numRows = ttt.numRows;
+		this.numColumns = ttt.numColumns;
+		this.currentGameBoardState.putAll(ttt.currentGameBoardState);
+		this.gameType = ttt.gameType;
+		this.turn = ttt.turn;
+	}
+	
 	// setters & getters 
 	@Override
 	public void resetBoard() {

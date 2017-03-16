@@ -24,6 +24,7 @@ public class ServerConnection extends Thread{
 	private NetworkProtocol clientInput = null;
 	private String gameType;
 	private int matchId;
+	private int tempMatchCount = 0;//For testing purposes
 	
 	public User getUser() {
 		return user;
@@ -72,23 +73,21 @@ public class ServerConnection extends Thread{
 						GameBoard gb1 = ((GameBoard) clientInput.getData()).clone();
 						System.out.println(gb1);
 						gb1.setTurn(true);
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1);
 						Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
 						activeGame.getKey().getUser().setUserToken(1);
 						activeGame.getValue().getUser().setUserToken(2);
-						System.out.println(activeGame.getKey().getMatchId());
-						System.out.println(activeGame.getValue().getMatchId());
-						System.out.println(lobby.getClientThreads().size());
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1, activeGame.getKey().getUser());
+//						System.out.println(activeGame.getKey().getMatchId());
+//						System.out.println(activeGame.getValue().getMatchId());
 						activeGame.getKey().sendPacket(outgoingData);
 						GameBoard gb2 = ((GameBoard) clientInput.getData()).clone();
 						gb2.setTurn(false);
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2);
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2, activeGame.getValue().getUser());
 						activeGame.getValue().sendPacket(outgoingData);
 					}
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.CLIENTMOVE){
 					Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
 					GameBoard gb1 = ((GameBoard) clientInput.getData()).clone();
-					System.out.println(gb1);
 					if(gb1.getTurn()){
 						gb1.setTurn(!gb1.getTurn());
 						if(this.getClientId() == activeGame.getKey().getClientId()){

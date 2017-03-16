@@ -5,9 +5,12 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import javafx.util.Pair;
 
 public class Client extends JFrame implements Runnable{
 	
@@ -17,6 +20,9 @@ public class Client extends JFrame implements Runnable{
 	protected User user;
 	boolean isStillPlaying = true;
 	private GameBoard currGame;
+	Scanner scanner = new Scanner(System.in);
+	int x = 0;
+	int y = 0;
 	
 	public static void main(String[] args){
 		//System.out.println("Starting client connection...");
@@ -47,24 +53,42 @@ public class Client extends JFrame implements Runnable{
 		
 		login();
 		
-
-		
-		
 		while(isStillPlaying){
 			try {
 				NetworkProtocol incoming = (NetworkProtocol)input.readObject();
 				if(incoming.getDataType() == NetworkProtocol.ProtocolType.TESTSERVER){
+					System.out.println("Player " + user.getUserName()+ " Wins!");
 					//System.out.println("Receiving TESTSERVER data from server");
-
-					
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
+					if(incoming.getUser() != null){
+						this.user = (User) incoming.getUser();
+						System.out.println(this.user.getUserToken());
+					}
 					currGame = ((GameBoard) incoming.getData());
-					System.out.println(currGame.getTurn());
-					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
-					sendPacket(outgoingData);
+					printBoard(currGame);
+					System.out.println("Make your move");
+					/*Change Game State*/
+					System.out.println("Pick a position on the board to make a move: ");
+					System.out.print("Enter x coordinate: ");
+					x = scanner.nextInt();
+					System.out.print("Enter y coordinate: ");
+					y = scanner.nextInt();
+					System.out.println("");
+					Pair<Integer, Integer> move = new Pair<Integer, Integer>(x,y);
+					if(currGame.moveSequence(move, new TicTacToePiece(), this.user.getUserToken())){
+						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
+						sendPacket(outgoingData);
+					}
+//					System.out.println(currGame.getTurn());
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.WAIT){
+					if(incoming.getUser() != null){
+						this.user = (User) incoming.getUser();
+						System.out.println(this.user.getUserToken());
+					}
 					currGame = ((GameBoard) incoming.getData());
-					System.out.println(currGame.getTurn());
+					System.out.println("Waiting for opponent to make move");
+					printBoard(currGame);
+					//System.out.println(currGame.getTurn());
 					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT);
 					sendPacket(outgoingData);
 				}
@@ -144,5 +168,24 @@ public class Client extends JFrame implements Runnable{
 			}
 			
 		}	
-	}	
+	}
+	
+	public static void printBoard(GameBoard gameBoard){
+		// row 1
+		System.out.println(
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(0,0)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(0,1)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(0,2)).name + "|");
+		// row 2
+		System.out.println(
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(1,0)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(1,1)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(1,2)).name + "|");
+		
+		// row 3
+		System.out.println(
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(2,0)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(2,1)).name + "|" +
+				gameBoard.getCurrentGameBoardState().get(new Pair<Integer, Integer>(2,2)).name + "|\n");
+	} 
 }

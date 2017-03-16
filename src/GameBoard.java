@@ -78,5 +78,6 @@ public abstract class GameBoard extends GameObject {
 	public abstract boolean hasWinner();
 	public abstract GameBoard clone();
 	public abstract boolean noLegitMoves();
+	public abstract Piece newGamePiece();
 
 }

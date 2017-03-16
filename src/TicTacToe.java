@@ -192,7 +192,6 @@ public class TicTacToe extends GameBoard{
 				}
 			}
 		}
-		
 		return true; 
 	}
 	
@@ -209,5 +208,10 @@ public class TicTacToe extends GameBoard{
 		}
 			
 		return true; 
+	}
+
+	@Override
+	public Piece newGamePiece() {
+		return new TicTacToePiece();
 	}
 }

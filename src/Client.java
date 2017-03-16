@@ -76,7 +76,7 @@ public class Client extends JFrame implements Runnable{
 					y = scanner.nextInt();
 					System.out.println("");
 					Pair<Integer, Integer> move = new Pair<Integer, Integer>(x,y);
-					if(currGame.moveSequence(move, new TicTacToePiece(), this.user.getUserToken())){//Instead of TicTacToePiece() its gonna need to be more like new gamePieceBuilder() so it allows for plugins
+					if(currGame.moveSequence(move, currGame.newGamePiece(), this.user.getUserToken())){
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
 						sendPacket(outgoingData);
 					}

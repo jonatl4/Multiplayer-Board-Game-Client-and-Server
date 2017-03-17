@@ -77,8 +77,6 @@ public class ServerConnection extends Thread{
 						activeGame.getKey().getUser().setUserToken(1);
 						activeGame.getValue().getUser().setUserToken(2);
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1, activeGame.getKey().getUser());
-//						System.out.println(activeGame.getKey().getMatchId());
-//						System.out.println(activeGame.getValue().getMatchId());
 						activeGame.getKey().sendPacket(outgoingData);
 						GameBoard gb2 = ((GameBoard) clientInput.getData()).clone();
 						gb2.setTurn(false);
@@ -221,8 +219,5 @@ public class ServerConnection extends Thread{
 	public int getMatchId(){
 		return matchId;
 	}
-	
-
-	
 	
 }

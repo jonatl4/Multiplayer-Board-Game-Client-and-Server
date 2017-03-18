@@ -24,7 +24,7 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 
 import javafx.util.Pair;
 
-public class ClientGUI extends Client implements ActionListener, Runnable {
+public class ClientGUI extends JFrame implements ActionListener{
 	
 	private HashMap<Pair<Integer,Integer>, Piece> grid = new HashMap<Pair<Integer,Integer>, Piece>();
 	private Container contentPane = this.getContentPane();
@@ -35,7 +35,12 @@ public class ClientGUI extends Client implements ActionListener, Runnable {
 	private ImageIcon tictactoeX = new ImageIcon(getClass().getResource("x.png"));
 	private ImageIcon tictactoeO = new ImageIcon(getClass().getResource("o.png"));
 	
-	public ClientGUI() {
+	private GameBoard tempGameboard;
+	private User tempUser;
+	
+	public ClientGUI(GameBoard tempGameboard, User tempUser) {
+		this.tempGameboard = tempGameboard;
+		this.tempUser = tempUser;
 	}
 	
 	public void initializeGUI(GameBoard gameBoard) {
@@ -48,7 +53,7 @@ public class ClientGUI extends Client implements ActionListener, Runnable {
 		
 		// Top HUD
 		JPanel topPanel = new JPanel();
-		message = new JLabel("Player " + user.getUserName());
+		message = new JLabel("Player " + tempUser.getUserName());
 		topPanel.add(message);
 		contentPane.add(topPanel, BorderLayout.PAGE_START);
 		
@@ -91,21 +96,22 @@ public class ClientGUI extends Client implements ActionListener, Runnable {
 		return icon;
 	}
 	
-	public void actionPerformed(ActionEvent ae) {
-		if(currGame.getTurn()){
-			String command = ae.getActionCommand();
-			Integer row = Integer.parseInt("" + command.charAt(0));
-			Integer col = Integer.parseInt("" + command.charAt(1));
-			Pair<Integer, Integer> currMove = new Pair<Integer, Integer>(row, col);
-			System.out.println("Move: " + String.valueOf(currMove.getKey()) + ", " + String.valueOf(currMove.getValue()));
-			if(currGame.moveSequence(currMove, currGame.newGamePiece(), user.getUserToken())){
-				NetworkProtocol outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
-				sendPacket(outgoingData);
-			}
-		}
-	}
+//	public void actionPerformed(ActionEvent ae) {
+//		if(tempGameboard.getTurn()){
+//			String command = ae.getActionCommand();
+//			Integer row = Integer.parseInt("" + command.charAt(0));
+//			Integer col = Integer.parseInt("" + command.charAt(1));
+//			Pair<Integer, Integer> currMove = new Pair<Integer, Integer>(row, col);
+//			System.out.println("Move: " + String.valueOf(currMove.getKey()) + ", " + String.valueOf(currMove.getValue()));
+//			if(tempGameboard.moveSequence(currMove, tempGameboard.newGamePiece(), tempUser.getUserToken())){
+//				NetworkProtocol outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, tempGameboard);
+//				sendPacket(outgoingData);
+//			}
+//		}
+//	}
 	
 	public void updateBoard(GameBoard game) {
+		tempGameboard = game;
 		int i;
 		int j;
 		ImageIcon icon = new ImageIcon();
@@ -128,6 +134,7 @@ public class ClientGUI extends Client implements ActionListener, Runnable {
 			}
 		}
 	}
+	
 	public GameBoard chooseGame() {
 		Object[] games = {"Tic Tac Toe", "Checkers", "Othello"};
 		int choice = JOptionPane.showOptionDialog(null, "Choose a game:", 
@@ -135,18 +142,25 @@ public class ClientGUI extends Client implements ActionListener, Runnable {
 				JOptionPane.WARNING_MESSAGE, null, games, games[0]);
 		if (choice == 0) {
 			return new TicTacToe();
-		} else if (choice == 1) {
+		}/* else if (choice == 1) {
 			// board = new Checkers();
 		} else if (choice == 2) {
 			// board = new Othello();
+		}*/else{
+			return new TicTacToe();	
 		}
-		return new TicTacToe();
 
 	}
-	
+
 	@Override
-	public void run() {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+//	@Override
+//	public void run() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

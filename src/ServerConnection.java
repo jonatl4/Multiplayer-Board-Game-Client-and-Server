@@ -82,10 +82,10 @@ public class ServerConnection extends Thread{
 							gb2.setTurn(false);
 							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2, activeGame.getValue().getUser());
 							activeGame.getValue().sendPacket(outgoingData);
+							activeGame.getKey().setWaiting(false);
+							activeGame.getValue().setWaiting(false);
 						}
-						waiting = false;
 					}else{//This means a game has been restarted
-						waiting = true;
 						lobby.setClientThread(clientId, this);
 						if(matchClients(clientId)){
 							GameBoard gb1 = ((GameBoard) clientInput.getData());
@@ -180,9 +180,15 @@ public class ServerConnection extends Thread{
 			} catch (IOException e) {
 				running = false;
 				lobby.getClientThreads().remove(clientId);
-				System.out.println("Problem with grabbing input");
+				try{
+					output.close();
+					input.close();
+					socket.close();
+				}catch(IOException ioe){
+					ioe.printStackTrace();
+				}
+				System.out.println("Disconnected");
 			}
-			
 		}
 	}
 	

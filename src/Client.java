@@ -181,6 +181,13 @@ public class Client extends JFrame implements Runnable, ActionListener{
 			} catch (IOException e) {
 				e.printStackTrace();
 				isStillPlaying = false;
+				try{
+					output.close();
+					input.close();
+					clientSocket.close();
+				}catch(IOException ioe){
+					ioe.printStackTrace();
+				}
 				JOptionPane.showMessageDialog(this, "SERVER CRASHED!");
 			}
 		}

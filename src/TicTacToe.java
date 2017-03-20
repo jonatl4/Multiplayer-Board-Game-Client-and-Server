@@ -8,6 +8,7 @@ public class TicTacToe extends GameBoard{
 
 	private int numRows; 
 	private int numColumns;
+	private String userColor = "X";
 	
 	// constructors 
 	public TicTacToe(){
@@ -68,7 +69,7 @@ public class TicTacToe extends GameBoard{
 				this.currentGameBoardState.get(move).name = "X";
 			}
 			else if(userToken == 2){
-				this.currentGameBoardState.get(move).name = "0";
+				this.currentGameBoardState.get(move).name = "O";
 			}
 			this.currentGameBoardState.get(move).currentPosition = move;
 		}
@@ -213,5 +214,16 @@ public class TicTacToe extends GameBoard{
 	@Override
 	public Piece newGamePiece() {
 		return new TicTacToePiece();
+	}
+
+	@Override
+	public String getPieceType(int userToken) {
+	    if (userToken == 1)
+	    {
+	      userColor = "X";
+	    }else{
+	    	userColor = "O";
+	    }
+	    return userColor;
 	}
 }

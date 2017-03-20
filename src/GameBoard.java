@@ -79,5 +79,6 @@ public abstract class GameBoard extends GameObject {
 	public abstract GameBoard clone();
 	public abstract boolean noLegitMoves();
 	public abstract Piece newGamePiece();
+	public abstract String getPieceType(int userToken);
 
 }

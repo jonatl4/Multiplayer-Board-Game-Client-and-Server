@@ -12,9 +12,9 @@ public class Othello extends GameBoard{
 	/** A constant representing an empty square on the board. */
 	  private static final String NO_CHIP = " ";
 	  /** A constant representing a black peg on the board. */
-	  private static final String BLACK_UP = "b";
+	  private static final String BLACK_UP = "black";
 	  /** A constant representing a white peg on the board. */
-	  private static final String WHITE_UP = "w";
+	  private static final String WHITE_UP = "white";
 	  /** A constant indicating the size of the game board. */
 
 	  private String userColor = BLACK_UP;
@@ -84,12 +84,9 @@ public class Othello extends GameBoard{
 	    	userColor=WHITE_UP;
 	    	oppCol = BLACK_UP;
 	    }
-	    System.out.println(userColor);
-	    System.out.println(oppCol);
 
 	    int row = move.getKey();
 	    int col = move.getValue();
-	    System.out.println(row + col);
 	    
 	  //current
 	  if (this.turn == true && this.currentGameBoardState.get(move).name.equals(NO_CHIP))
@@ -301,6 +298,19 @@ public class Othello extends GameBoard{
 	public Piece newGamePiece() {
 		// TODO Auto-generated method stub
 		return new OthelloPiece();
+	}
+
+
+
+	@Override
+	public String getPieceType(int userToken) {
+	    if (userToken == 1)
+	    {
+	      userColor=BLACK_UP;
+	    }else{
+	    	userColor=WHITE_UP;
+	    }
+	    return userColor;
 	}
 
 }

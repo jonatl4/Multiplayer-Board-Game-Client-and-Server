@@ -24,7 +24,7 @@ public class ServerConnection extends Thread{
 	private NetworkProtocol clientInput = null;
 	private String gameType;
 	private int matchId;
-	private int tempMatchCount = 0;//For testing purposes
+	private boolean waiting = true;//I created this to check for game restarts
 	
 	public User getUser() {
 		return user;
@@ -68,25 +68,45 @@ public class ServerConnection extends Thread{
 				}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.STARTGAME){
 					this.gameType = ((GameBoard) clientInput.getData()).getGameType();
-					System.out.println(this.gameType);
-					if(matchClients(clientId)){
-						GameBoard gb1 = ((GameBoard) clientInput.getData());
-						System.out.println(gb1);
-						gb1.setTurn(true);
-						Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
-						activeGame.getKey().getUser().setUserToken(1);
-						activeGame.getValue().getUser().setUserToken(2);
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1, activeGame.getKey().getUser());
-						activeGame.getKey().sendPacket(outgoingData);
-						GameBoard gb2 = ((GameBoard) clientInput.getData());
-						gb2.setTurn(false);
-						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2, activeGame.getValue().getUser());
-						activeGame.getValue().sendPacket(outgoingData);
+					if(waiting){
+						if(matchClients(clientId)){
+							GameBoard gb1 = ((GameBoard) clientInput.getData());
+							System.out.println(gb1);
+							gb1.setTurn(true);
+							Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
+							activeGame.getKey().getUser().setUserToken(1);
+							activeGame.getValue().getUser().setUserToken(2);
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1, activeGame.getKey().getUser());
+							activeGame.getKey().sendPacket(outgoingData);
+							GameBoard gb2 = ((GameBoard) clientInput.getData());
+							gb2.setTurn(false);
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2, activeGame.getValue().getUser());
+							activeGame.getValue().sendPacket(outgoingData);
+						}
+						waiting = false;
+					}else{//This means a game has been restarted
+						waiting = true;
+						lobby.setClientThread(clientId, this);
+						if(matchClients(clientId)){
+							GameBoard gb1 = ((GameBoard) clientInput.getData());
+							System.out.println(gb1);
+							gb1.setTurn(true);
+							Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
+							activeGame.getKey().getUser().setUserToken(1);
+							activeGame.getValue().getUser().setUserToken(2);
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.MAKEMOVE, gb1, activeGame.getKey().getUser());
+							activeGame.getKey().sendPacket(outgoingData);
+							GameBoard gb2 = ((GameBoard) clientInput.getData());
+							gb2.setTurn(false);
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT, gb2, activeGame.getValue().getUser());
+							activeGame.getValue().sendPacket(outgoingData);
+						}
 					}
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.CLIENTMOVE){
 					Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
 					GameBoard gb1 = ((GameBoard) clientInput.getData());
 					if(gb1.hasWinner() || gb1.noLegitMoves()){
+						lobby.getActiveGames().remove(matchId);//Delete active games from the lobby
 						outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.GAMEOVER, gb1);
 						activeGame.getKey().sendPacket(outgoingData);
 						activeGame.getValue().sendPacket(outgoingData);
@@ -111,6 +131,11 @@ public class ServerConnection extends Thread{
 						}
 					}
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.WAIT){}
+				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.SAVERECORD){
+					user = (User)clientInput.getData();
+					System.out.println(user.getRecords());
+					User.resaveAccounts(user);
+				}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.ACCOUNT)
 				{
 					user = (User)clientInput.getData();
@@ -154,6 +179,7 @@ public class ServerConnection extends Thread{
 				e.printStackTrace();
 			} catch (IOException e) {
 				running = false;
+				lobby.getClientThreads().remove(clientId);
 				System.out.println("Problem with grabbing input");
 			}
 			
@@ -218,6 +244,10 @@ public class ServerConnection extends Thread{
 	
 	public int getMatchId(){
 		return matchId;
+	}
+	
+	private void setWaiting(boolean flag){
+		waiting = flag;
 	}
 	
 }

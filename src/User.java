@@ -74,6 +74,10 @@ public class User extends GameObject{
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public void saveRecord(String recordType, int record){
+		this.records.put(recordType, record);
+	}
 
 	public HashMap<String, Integer> getRecords() {
 		return records;
@@ -132,6 +136,11 @@ public class User extends GameObject{
 				e.printStackTrace();
 			}			
 		}
+	}
+	
+	public static void resaveAccounts(User inAccount){
+		database.put(inAccount.getUserName(), inAccount);
+		saveAccounts();
 	}
 	
 	/**

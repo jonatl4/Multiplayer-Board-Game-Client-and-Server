@@ -44,8 +44,10 @@ public class Client extends JFrame implements Runnable, ActionListener{
 	private Map<Pair<Integer,Integer>, Piece> grid;
 	private Container contentPane = this.getContentPane();
 	private JPanel gui = new JPanel();
+	private JPanel topPanel = new JPanel();
 	private JButton[][] buttons = new JButton[8][8];
 	private JLabel message;
+	private JLabel statsLabel;
 	
 	private ImageIcon tictactoeX = new ImageIcon(getClass().getResource("x.png"));
 	private ImageIcon tictactoeO = new ImageIcon(getClass().getResource("o.png"));
@@ -92,27 +94,25 @@ public class Client extends JFrame implements Runnable, ActionListener{
 				NetworkProtocol incoming = (NetworkProtocol)input.readObject();
 				if(incoming.getDataType() == NetworkProtocol.ProtocolType.TESTSERVER){
 					System.out.println("Player " + user.getUserName()+ " Wins!");
-					//System.out.println("Receiving TESTSERVER data from server");
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
 					if(incoming.getUser() != null){
 						user = (User) incoming.getUser();
-						System.out.println(user.getUserToken());
+						JOptionPane.showMessageDialog(this, "Start Game! You're " + currGame.getPieceType(user.getUserToken()));
+						statsLabel.setText("Win-Loss Record: " + user.getRecord("Wins") + " - " + user.getRecord("Losses"));
 					}
 					System.out.println("Make your move");
 					currGame = ((GameBoard) incoming.getData());
-//					gui.updateBoard(currGame);
 					updateBoard();
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.WAIT){
 					if(incoming.getUser() != null){
 						user = (User) incoming.getUser();
 						System.out.println(user.getUserToken());
-						JOptionPane.showMessageDialog(this, "Start Game!");
+						JOptionPane.showMessageDialog(this, "Start Game! You're " + currGame.getPieceType(user.getUserToken()));
+						statsLabel.setText("Win-Loss Record: " + user.getRecord("Wins") + " - " + user.getRecord("Losses"));
 					}
 					currGame = ((GameBoard) incoming.getData());
 					System.out.println("Waiting for opponent to make move");
-//					gui.updateBoard(currGame);
-					updateBoard();
-					//System.out.println(currGame.getTurn());
+					updateBoard();					
 					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT);
 					sendPacket(outgoingData);
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.GAMEOVER){
@@ -120,28 +120,49 @@ public class Client extends JFrame implements Runnable, ActionListener{
 					int winner = currGame.checkWinner();
 					if(winner == 1){
 						if(user.getUserToken() == winner){
-//							gui.updateBoard(currGame);
+							int wins = user.getRecord("Wins");
+							wins++;
+							user.saveRecord("Wins", wins);
 							updateBoard();
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.SAVERECORD, user);
+							sendPacket(outgoingData);
 							JOptionPane.showMessageDialog(this, "You Won!");
+							playAgain();
 						}else{
-//							gui.updateBoard(currGame);
+							int losses = user.getRecord("Losses");
+							losses++;
+							user.saveRecord("Losses", losses);
 							updateBoard();
-							JOptionPane.showMessageDialog(this, "Sorry, you lost...");;
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.SAVERECORD, user);
+							sendPacket(outgoingData);
+							JOptionPane.showMessageDialog(this, "Sorry, you lost...");
+							playAgain();
 						}
 					}else if(winner == 2){
 						if(user.getUserToken() == winner){
-//							gui.updateBoard(currGame);
+							int wins = user.getRecord("Wins");
+							wins++;
+							user.saveRecord("Wins", wins);
 							updateBoard();
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.SAVERECORD, user);
+							sendPacket(outgoingData);
 							JOptionPane.showMessageDialog(this, "You Won!");
+							playAgain();
 						}else{
-//							gui.updateBoard(currGame);
+							int losses = user.getRecord("Losses");
+							losses++;
+							user.saveRecord("Losses", losses);
 							updateBoard();
+							outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.SAVERECORD, user);
+							sendPacket(outgoingData);
 							JOptionPane.showMessageDialog(this, "Sorry, you lost...");
+							playAgain();
 						}
 					}else{
 						updateBoard();
 						JOptionPane.showMessageDialog(this, "Draw");
 						System.out.println("Draw!");
+						playAgain();
 					}
 				}
 				else if(incoming.getDataType() == NetworkProtocol.ProtocolType.ACCOUNTVALID){
@@ -162,6 +183,20 @@ public class Client extends JFrame implements Runnable, ActionListener{
 				isStillPlaying = false;
 				JOptionPane.showMessageDialog(this, "SERVER CRASHED!");
 			}
+		}
+	}
+	
+	public void playAgain(){
+		int option = JOptionPane.showConfirmDialog(this, "Play again?", "BestGameServer", JOptionPane.YES_NO_OPTION);
+		if(option == JOptionPane.YES_OPTION){
+			gui.removeAll();
+			topPanel.removeAll();
+			currGame = chooseGame();
+			initializeGUI();
+			NetworkProtocol outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.STARTGAME, currGame);
+			sendPacket(outgoingData);
+		}else{
+			System.exit(0);
 		}
 	}
 	
@@ -260,7 +295,6 @@ public class Client extends JFrame implements Runnable, ActionListener{
 		this.setVisible(true);
 		
 		// Top HUD
-		JPanel topPanel = new JPanel();
 		message = new JLabel("Player " + user.getUserName());
 		topPanel.add(message);
 		contentPane.add(topPanel, BorderLayout.PAGE_START);
@@ -302,6 +336,8 @@ public class Client extends JFrame implements Runnable, ActionListener{
 			buttons[i][j].setActionCommand("" + i + "" + j);
 			if(currGame.getGameType().equals("OTHELLO")){
 				buttons[i][j].setBackground(Color.GREEN);
+				buttons[i][j].setOpaque(true);
+				buttons[i][j].setBorderPainted(true);
 			}
 			gui.add(buttons[i][j]);
 		}
@@ -309,7 +345,7 @@ public class Client extends JFrame implements Runnable, ActionListener{
 		// Bottom HUD
 		JPanel botPanel = new JPanel();
 		JPanel statsPanel = new JPanel();
-		JLabel statsLabel = new JLabel("Win-Loss Record: GAH!");
+		statsLabel = new JLabel("Win-Loss Record: wait until connected...");
 		statsPanel.add(statsLabel);
 		botPanel.add(statsPanel, BorderLayout.WEST);
 		contentPane.add(botPanel, BorderLayout.SOUTH);
@@ -327,6 +363,12 @@ public class Client extends JFrame implements Runnable, ActionListener{
 		int i;
 		int j;
 		ImageIcon icon = new ImageIcon();
+		
+		if(currGame.getTurn()){
+			message.setText("Player " + user.getUserName() + " it's your move");
+		}else{
+			message.setText("Waiting for your opponenet to move");
+		}
 
 		if (currGame.getGameType().equals("TICTACTOE")) {
 			grid = currGame.getCurrentGameBoardState();
@@ -339,7 +381,7 @@ public class Client extends JFrame implements Runnable, ActionListener{
 				if (piece.getName().equals("X")) {
 					icon = scaleImg(tictactoeX, buttons[i][j]);
 					buttons[i][j].setIcon(icon);
-				} else if (piece.getName().equals("0")) {
+				} else if (piece.getName().equals("O")) {
 					icon = scaleImg(tictactoeO, buttons[i][j]);
 					buttons[i][j].setIcon(icon);
 				}
@@ -352,10 +394,10 @@ public class Client extends JFrame implements Runnable, ActionListener{
 				j = entry.getKey().getValue();
 				
 				Piece piece = currGame.getPiece(entry.getKey());
-				if(piece.getName().equals("b")){
+				if(piece.getName().equals("black")){
 					icon = scaleImg(othelloB, buttons[i][j]);
 					buttons[i][j].setIcon(icon);
-				}else if(piece.getName().equals("w")){
+				}else if(piece.getName().equals("white")){
 					icon = scaleImg(othelloW, buttons[i][j]);
 					buttons[i][j].setIcon(icon);
 				}

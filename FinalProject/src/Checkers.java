@@ -83,7 +83,7 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 					}
 					
 					this.pieceSelected.setCurrentPosition(move);
-					System.out.println("Piece Selected: " + this.pieceSelected.getCurrentPosition());
+					System.out.println("Piece Selected: " + pieceSelected.getCurrentPosition());
 					selection = move;//This saves the Pair<X, Y> object so the code can reference it later
 					return false;//finally returns true although in our case we might want to return false maybe use a boolean variable called gameStateChanged
 				}
@@ -93,7 +93,7 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 			}
 		}
 		else{//So if we get to here we know the program knows that the user has selected its' piece it wants to move
-			System.out.println("Piece Selected: " + pieceSelected.getCurrentPosition());
+			
 			if(x-selection.getKey()==0 && y-selection.getValue()==0) //If we click the piece again it'll undo the selected checkers piece so we're free to choose another one
 			{
 				pieceSelected.setName("BLANK");				
@@ -104,25 +104,22 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 				return false; 
 			}
 			
-			System.out.println("jump check " + String.valueOf(jumpCheck));
+			
 			int moveType = legitMove(move, jumpCheck, userToken);//1 for regular move and 2 for jumping move and 0 for invalid move
-			System.out.println(moveType);
+			
 			if(moveType > 0){
 				boolean kinged = ((userToken == 1 && x == 0) || (userToken == 2 && x == 7));
 				if(userToken == 1){
 					this.currentGameBoardState.get(move).setName("red");
 					this.currentGameBoardState.get(move).setCurrentPosition(move);//Set all the appropriate info where the new piece is being placed
-//					System.out.println(this.currentGameBoardState.get(move).getName());
-//					System.out.println(this.currentGameBoardState.get(move).getCurrentPosition());
+
 				}
 				else if(userToken == 2){
 					this.currentGameBoardState.get(move).setName("black");
 					this.currentGameBoardState.get(move).setCurrentPosition(move);
-					System.out.println(this.currentGameBoardState.get(move).getName());
 				}
 				
 				this.currentGameBoardState.get(selection).setName("BLANK");//Takes the initially selected piece and turns it to a blank spot
-				System.out.println("CHECK THIS1 " + this.currentGameBoardState.get(move).getName());
 				
 				if(!kinged){
 					System.out.println("Piece Selected: " + pieceSelected.getCurrentPosition());
@@ -144,18 +141,11 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 					}
 				}
 				
-				System.out.println("CHECK THIS2 " + this.currentGameBoardState.get(move).getName());
-				
 				if(moveType == 1){
 					this.currentGameBoardState.get(pieceSelected.getCurrentPosition()).setName("BLANK");
 					this.pieceSelected.setName("BLANK");
-					System.out.println("CHECK THIS3 " + this.currentGameBoardState.get(move).getName());
 				}
 				if(moveType == 2){
-					System.out.println("here");
-					System.out.println(selection);
-					System.out.println(move);
-					System.out.println("here");
 					int fromX = selection.getKey();
 					int fromY = selection.getValue();
 					int toX = move.getKey();
@@ -176,7 +166,7 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 					
 
 					if(!kinged && canJump(move)){
-						System.out.println("here");
+						
 						Pair<Integer, Integer> temp = new Pair<Integer, Integer>(x,y);
 						selection = temp;
 					}else{
@@ -184,7 +174,7 @@ public class Checkers extends GameBoard implements Serializable, Cloneable
 						this.pieceSelected.setName("BLANK");
 					}
 				}
-//				System.out.println("CHECK THIS4 " + this.currentGameBoardState.get(move).getName());
+
 				return true;
 			}
 		}

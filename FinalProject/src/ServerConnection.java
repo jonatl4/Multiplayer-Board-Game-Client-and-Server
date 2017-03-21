@@ -73,17 +73,11 @@ public class ServerConnection extends Thread{
 			try {
 				clientInput = (NetworkProtocol)input.readObject();
 				
-				if(clientInput.getDataType() == NetworkProtocol.ProtocolType.TESTCLIENT){
-					//System.out.println("Validating Account for "+String.valueOf(clientId));
-					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.TESTSERVER);
-					sendPacket(outgoingData);				
-				}
-				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.STARTGAME){
+				if(clientInput.getDataType() == NetworkProtocol.ProtocolType.STARTGAME){
 					this.gameType = ((GameBoard) clientInput.getData()).getGameType();
 					if(waiting){
 						if(matchClients(clientId)){
 							GameBoard gb1 = ((GameBoard) clientInput.getData());
-							System.out.println(gb1);
 							gb1.setTurn(true);
 							Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
 							activeGame.getKey().getUser().setUserToken(1);
@@ -101,7 +95,6 @@ public class ServerConnection extends Thread{
 						lobby.setClientThread(clientId, this);
 						if(matchClients(clientId)){
 							GameBoard gb1 = ((GameBoard) clientInput.getData());
-							System.out.println(gb1);
 							gb1.setTurn(true);
 							Pair<ServerConnection, ServerConnection> activeGame = lobby.getActiveGame(matchId);
 							activeGame.getKey().getUser().setUserToken(1);
@@ -145,7 +138,6 @@ public class ServerConnection extends Thread{
 				}else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.WAIT){}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.SAVERECORD){
 					user = (User)clientInput.getData();
-					System.out.println(user.getRecords());
 					User.resaveAccounts(user);
 				}
 				else if(clientInput.getDataType() == NetworkProtocol.ProtocolType.ACCOUNT)
@@ -238,7 +230,6 @@ public class ServerConnection extends Thread{
 								clientMap.getValue().setMatchId(matchId);
 								break;
 							}else{
-								System.out.println(matchId);
 								matchId++;
 							}
 						}

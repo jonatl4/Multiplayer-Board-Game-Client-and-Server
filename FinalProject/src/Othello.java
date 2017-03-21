@@ -103,41 +103,41 @@ public class Othello extends GameBoard{
 	  {
 	    if (row+1<8 && col+1<8 && getPiece(row+1, col+1).equals(oppCol))
 	    { 
-	    	System.out.println("bottom right");
+	    	
 	      result=true;
 	    }else if(row+1<8 && getPiece(row+1, col).equals(oppCol))
 	    {
 
-	    	System.out.println("below");
+	    	
 	      result=true;
 	    }else if(col+1<8 && getPiece(row, col+1).equals(oppCol))
 	    {
-	    	System.out.println("right");
+	    	
 	      result=true;
 	    }else if (col-1>-1 && getPiece(row, col-1).equals(oppCol))
 	    {
-	    	System.out.println("col: " + String.valueOf(col) + " row: " + String.valueOf(row));
-	    	System.out.println("left");
+	    	
+	    	
 	      result=true;
 	    }else if (row-1>-1 && col-1>-1 && getPiece(row-1, col-1).equals(oppCol))
 	    {
-	    	System.out.println("top left");
+	    	
 	      result=true;
 	    }else if (row-1>-1 && getPiece(row-1, col).equals(oppCol))
 	    { 
-	    	System.out.println("top");
+	    	
 	      result=true;
 	    }else if(row-1>-1 && col+1<8 && getPiece(row-1, col+1).equals(oppCol))
 	    {
-	    	System.out.println("top right");
+	    	
 	      result=true;
 	    }else if (row+1<8 && col-1>-1 && getPiece(row+1, col-1).equals(oppCol))
 	    {
-	    	System.out.println("bottom left");
+	    	
 	      result = true;
 	    }
 	  }
-	  System.out.println(result);
+	  
 	  return result;
 	}
 
@@ -228,7 +228,7 @@ public class Othello extends GameBoard{
 	    if (count>0)
 	    {
 			this.currentGameBoardState.get(new Pair<Integer, Integer>(row,col)).name=turn;
-			System.out.println("takeTurn returns true");
+			
 	    	return true;
 	    }
 	    return false;

@@ -113,26 +113,21 @@ public class Client extends JFrame implements Runnable, ActionListener{
 		while(isStillPlaying){
 			try {
 				NetworkProtocol incoming = (NetworkProtocol)input.readObject();
-				if(incoming.getDataType() == NetworkProtocol.ProtocolType.TESTSERVER){
-					System.out.println("Player " + user.getUserName()+ " Wins!");
-				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
+				if(incoming.getDataType() == NetworkProtocol.ProtocolType.MAKEMOVE){
 					if(incoming.getUser() != null){
 						user = (User) incoming.getUser();
 						JOptionPane.showMessageDialog(this, "Start Game! You're " + currGame.getPieceType(user.getUserToken()));
 						statsLabel.setText("Win-Loss Record: " + user.getRecord("Wins") + " - " + user.getRecord("Losses"));
 					}
-					System.out.println("Make your move");
 					currGame = ((GameBoard) incoming.getData());
 					updateBoard();
 				}else if(incoming.getDataType() == NetworkProtocol.ProtocolType.WAIT){
 					if(incoming.getUser() != null){
 						user = (User) incoming.getUser();
-						System.out.println(user.getUserToken());
 						JOptionPane.showMessageDialog(this, "Start Game! You're " + currGame.getPieceType(user.getUserToken()));
 						statsLabel.setText("Win-Loss Record: " + user.getRecord("Wins") + " - " + user.getRecord("Losses"));
 					}
 					currGame = ((GameBoard) incoming.getData());
-					System.out.println("Waiting for opponent to make move");
 					updateBoard();					
 					outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.WAIT);
 					sendPacket(outgoingData);
@@ -182,7 +177,6 @@ public class Client extends JFrame implements Runnable, ActionListener{
 					}else{
 						updateBoard();
 						JOptionPane.showMessageDialog(this, "Draw");
-						System.out.println("Draw!");
 						playAgain();
 					}
 				}
@@ -234,7 +228,6 @@ public class Client extends JFrame implements Runnable, ActionListener{
 			Integer row = Integer.parseInt("" + command.charAt(0));
 			Integer col = Integer.parseInt("" + command.charAt(1));
 			Pair<Integer, Integer> currMove = new Pair<Integer, Integer>(row, col);
-			System.out.println("Move: " + String.valueOf(currMove.getKey()) + ", " + String.valueOf(currMove.getValue()));
 			if(currGame.moveSequence(currMove, currGame.newGamePiece(), user.getUserToken())){
 				NetworkProtocol outgoingData = new NetworkProtocol(NetworkProtocol.ProtocolType.CLIENTMOVE, currGame);
 				sendPacket(outgoingData);

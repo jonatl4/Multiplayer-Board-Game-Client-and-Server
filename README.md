@@ -1,4 +1,5 @@
-# Multiplayer Board Game Client & Server (Inf-122-Final-Project)
+# Multiplayer Board Game Client & Server 
+
 Team Members: Gen Fillipow, Jana Abumeri, Eva Ruiz, Adil Rafaa, Jonathan Lee, David Diep, Seth Kruse, Brandon Truong
 
 How to use our GameServer
